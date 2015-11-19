@@ -2,7 +2,6 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
 var createBrowserHistory = require('history/lib/createBrowserHistory');
-var helpers = require('./helpers');
 var ReBase = require('re-base'); //Firebase
 
 var Router = ReactRouter.Router;
@@ -48,19 +47,29 @@ var App = React.createClass({
     deleteGift : function(e){
         e.preventDefault();
         this.state.gifts[this.user][e.target.value] = null;
-        this.setState({gifts: this.props.gifts});
+        this.setState({gifts: this.state.gifts});
 
     },
+    markGift : function(event, user, key){
+        event.preventDefault;
+
+        this.state.gifts[user][key].taken = true;
+        this.setState({gifts: this.state.gifts});
+
+
+    },
+
 
     render : function(){
         this.user = this.props.routeParams.userName;
         return (
             <div>
                 <AddIdeas gifts={this.state.gifts} deleteGift={this.deleteGift} addGift={this.addGift} user={this.user} />
-                <SeeIdeas gifts={this.state.gifts} user={this.user} />
+                <SeeIdeas gifts={this.state.gifts} user={this.user} markGift={this.markGift}/>
             </div>
         )
     }
+
 });
 
 
@@ -68,34 +77,35 @@ var App = React.createClass({
 var AddIdeas = React.createClass({
 
     renderGifts : function(key){
-
         var user = this.props.user;
+
+        if(key !== user){
+            return;
+        }
+        var self = this;
+
 
         var gift = this.props.gifts[key];
 
-        for(var keyA in gift){
-            if(gift.hasOwnProperty(keyA)){
-                if(!keyA){
-                    return <li key={keyA}>You havent added any ideas yet!</li>
+        function addGifts(key){
+            if(!key){
+                return <li key={key}>You havent added any ideas yet!</li>
 
-                }
-
-                return (
-                    <li key={keyA}>
-                        {gift[keyA].name}
-                        <button value={keyA} onClick={this.props.deleteGift}> delete</button>
-                    </li>
-                )
             }
+
+            return (
+                <li key={key.name}>
+                    {gift[key].name}
+                    <button value={key} onClick={self.props.deleteGift}> delete</button>
+                </li>
+            )
         }
 
-
-
-
-
-
+        return Object.keys(gift).map(addGifts);
 
     },
+
+
     createGift : function(e){
         e.preventDefault();
         var gift = {
@@ -109,15 +119,17 @@ var AddIdeas = React.createClass({
     },
     render : function(){
         var user = this.props.user;
-        var gifts = this.props.gifts;
+        //var gifts = this.props.gifts;
+        //var userGifts = gifts[user];
 
+
+//
         return (
             <div className="main">
                 <h3> Welcome, {user} </h3>
                 <p>here is a list of all your current gift ideas </p>
                 <ul>
-                    {Object.keys(gifts).map(this.renderGifts)}
-
+                    {Object.keys(this.props.gifts).map(this.renderGifts)}
                 </ul>
                 <form ref="giftForm" onSubmit={this.createGift}>
                     <input ref="name"/>
@@ -132,20 +144,12 @@ var AddIdeas = React.createClass({
 
 var SeeIdeas = React.createClass({
 
-    markGift : function(key){
-        var currentGift = key;
 
-        currentGift["taken"] = true;
-
-        this.state.gifts[key] = currentGift;
-
-       // this.setState({gifts: this.state.gifts});
-
-    },
     renderGifts : function(key, user){
+        var self = this;
         var currentUser = this.props.user;
 
-        var gift = this.props.gifts[currentUser][key];
+        var gift = this.props.gifts[user][key];
         //var gift = key;
 
 
@@ -157,34 +161,47 @@ var SeeIdeas = React.createClass({
         if(user === currentUser){
             return <li key={key}>(hidden)</li>
         }
+        function giftName(gift){
+            if(gift.taken){
+                return(
+                    <span>
+                        <strike>{gift.name}</strike>
+                    </span>
+                )
+            }
+            return(
+                <span>{gift.name}</span>
+            )
+        }
         return (
             <li key={key}>
-                {gift.name}
-                <a href="#" value={key} onClick={this.markGift(gift)}> mark as taken</a>
+                {giftName(gift)}
+                <button value={key} onClick={function(event){self.props.markGift(event, user, key);}}> mark as taken</button>
             </li>
 
         )
     },
-    renderMembers : function(giftId){
+    renderMembers : function(user){
+
         var self = this;
-        var member = Object.keys(this.props.gifts[giftId]);
+        var gifts = Object.keys(this.props.gifts[user]);
         var currentMember = this.props.user;
 
 
-        if(!member){
-            return <li key={giftId}>No one has any ideas yet!</li>
+        if(!gifts){
+            return <li key={user}>No one has any ideas yet!</li>
 
         }
-        if(giftId === currentMember){
-            return <li key={giftId} >hiding your stuffs</li>
+        if(user === currentMember){
+            return;
         }
 
         return (
-            <li key={giftId}>
-                {giftId}
+            <li key={user}>
+                {user}
                 <ul>
-                    {member.map(function(a){
-                        return self.renderGifts(a, giftId);
+                    {gifts.map(function(a){
+                        return self.renderGifts(a, user);
 
                     })}
                 </ul>
@@ -227,8 +244,14 @@ var SelectUser = React.createClass({
                {/* comment syntax is shit */}
                <h2>Who are you?</h2>
                <select ref="userName" required>
-                    <option>Ben</option>
+                   <option>Annie</option>
+                   <option>Ben</option>
                    <option>Doug</option>
+                   <option>Kate</option>
+                   <option>Lauretta</option>
+                   <option>Leah</option>
+                   <option>Michael</option>
+                   <option>Steve</option>
                </select>
                <p>Select an option below</p>
                <button onClick={this.addIdeas}>Add Ideas</button>
