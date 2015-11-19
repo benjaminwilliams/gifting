@@ -58,18 +58,35 @@ var App = React.createClass({
 
 
     },
+    unMarkGift : function(event, user, key){
+        event.preventDefault;
+
+        this.state.gifts[user][key].taken = false;
+        this.setState({gifts: this.state.gifts});
+    },
 
 
     render : function(){
         this.user = this.props.routeParams.userName;
+
         return (
-            <div>
-                <AddIdeas gifts={this.state.gifts} deleteGift={this.deleteGift} addGift={this.addGift} user={this.user} />
-                <SeeIdeas gifts={this.state.gifts} user={this.user} markGift={this.markGift}/>
+            <div className="row">
+                <div className="col-md-12 intro">
+                    <h3> Welcome, {this.user} </h3>
+                    <p>
+                        Here you add gift ideas and see others ideas as well. On the left, you are able to add to your
+                        wishlist. on the right, you can see what others have on thier wishlist.
+                    </p>
+                </div>
+                <div className="col-md-6 add-ideas">
+                    <AddIdeas gifts={this.state.gifts} deleteGift={this.deleteGift} addGift={this.addGift} user={this.user} />
+                </div>
+                <div className="col-md-6 see-ideas">
+                    <SeeIdeas gifts={this.state.gifts} user={this.user} markGift={this.markGift} unMarkGift={this.unMarkGift} />
+                </div>
             </div>
         )
     }
-
 });
 
 
@@ -126,8 +143,7 @@ var AddIdeas = React.createClass({
 //
         return (
             <div className="main">
-                <h3> Welcome, {user} </h3>
-                <p>here is a list of all your current gift ideas </p>
+                <h2>Your Wishlist</h2>
                 <ul>
                     {Object.keys(this.props.gifts).map(this.renderGifts)}
                 </ul>
@@ -173,10 +189,21 @@ var SeeIdeas = React.createClass({
                 <span>{gift.name}</span>
             )
         }
+        function giftTaken(gift){
+            if(gift.taken){
+                return(
+                    <button value={key} onClick={function(event){self.props.unMarkGift(event, user, key);}}> unmark</button>
+                )
+            }
+            return(
+                <button value={key} onClick={function(event){self.props.markGift(event, user, key);}}> mark as taken</button>
+            )
+        }
+
         return (
             <li key={key}>
                 {giftName(gift)}
-                <button value={key} onClick={function(event){self.props.markGift(event, user, key);}}> mark as taken</button>
+                {giftTaken(gift)}
             </li>
 
         )
@@ -213,7 +240,7 @@ var SeeIdeas = React.createClass({
         var gifts = Object.keys(this.props.gifts);
         return (
             <div>
-                <h2>{user}</h2>
+                <h2>Others Wishlist</h2>
                 <ul>
                     {gifts.map(this.renderMembers)}
                 </ul>
@@ -227,36 +254,30 @@ var SelectUser = React.createClass({
     mixins : [
         History
     ],
-    addIdeas : function(e){
+    go : function(e){
         e.preventDefault();
         var userName = this.refs.userName.value;
         this.history.pushState(null, '/main/' + userName);
 
     },
-    seeIdeas : function(e){
-        e.preventDefault();
-        var userName = this.refs.userName.value;
-        this.history.pushState(null, '/main/' + userName);
-    },
     render : function(){
        return (
-           <form className="store-selector">
-               {/* comment syntax is shit */}
-               <h2>Who are you?</h2>
-               <select ref="userName" required>
-                   <option>Annie</option>
-                   <option>Ben</option>
-                   <option>Doug</option>
-                   <option>Kate</option>
-                   <option>Lauretta</option>
-                   <option>Leah</option>
-                   <option>Michael</option>
-                   <option>Steve</option>
-               </select>
-               <p>Select an option below</p>
-               <button onClick={this.addIdeas}>Add Ideas</button>
-               <button onClick={this.seeIdeas}>See others gifts</button>
-           </form>
+           <div className="col-sm-6 col-sm-offset-3">
+               <form className="user-selector">
+                   <h2>Who are you?</h2>
+                   <select ref="userName" required>
+                       <option>Annie</option>
+                       <option>Ben</option>
+                       <option>Doug</option>
+                       <option>Kate</option>
+                       <option>Lauretta</option>
+                       <option>Leah</option>
+                       <option>Michael</option>
+                       <option>Steve</option>
+                   </select>
+                   <button onClick={this.go}>Select</button>
+               </form>
+           </div>
        )
 
     }
