@@ -1,0 +1,125 @@
+.main {
+
+}
+
+.user-selector {
+    text-align: center;
+    font-size: 2em;
+    padding: 20px;
+    border: 2px solid #ccc;
+    background-color: #f5f5f5;
+    margin-top: 50px;
+    color: #333;
+}
+.user-selector h2 {
+    background-color: transparent;
+}
+.user-selector select {
+    margin-right: 20px;
+    width: 300px;
+}
+
+.user-selector button {
+    margin-right: 20px;
+    margin-top: 20px;
+    width: 300px;
+}
+
+.heading {
+    text-align: center;
+    background: #990900;
+
+    padding: 10px 0;
+    color: #eee;
+}
+
+.body {
+    min-height: 100vh;
+    background-color: #390500;
+}
+
+.add-ideas {
+    color: #333;
+}
+button {
+    border: none;
+    background-color: #7e0f14;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: #fff;
+}
+.add-ideas form {
+    background-color: #ffffff;
+    display: block;
+    padding: 20px 20px 50px 20px;
+    clear: both;
+}
+.add-ideas input {
+    width: 100%;
+    margin: 10px 0;
+    padding: 5px;
+}
+.add-ideas button {
+    float: right;
+}
+.add-ideas .main {
+    margin: 10px 50px;
+    clear: both;
+}
+.intro {
+    margin: 40px;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+li {
+    padding: 10px;
+    background-color: rgba(255, 237, 237, 1);
+    overflow: auto;
+    clear: both;
+}
+li:nth-child(odd){
+    background-color: #fff;
+}
+li button {
+    float: right;
+}
+.main-page {
+    color: #fff;
+    background-color: #431A1B;
+}
+
+h2 {
+    width: 100%;
+    display: block;
+    background-color: #FDC764;
+    color: #333;
+    padding: 10px;
+    margin-bottom: 0;
+}
+
+.see-ideas {
+    color: #333;
+}
+.see-ideas li {
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+
+}
+.see-ideas > div > ul > li > ul > li {
+    font-size: 14px;
+    font-weight: normal;
+    border-bottom: none;
+    background-color: rgba(255, 237, 237, 1);
+
+}
+
+.see-ideas > div > ul > li > ul > li:nth-child(odd){
+    background-color: #fff;
+}
