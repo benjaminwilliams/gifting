@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "prod": "firebase-williams",
+    "default": "firebase-williams"
+  }
+}

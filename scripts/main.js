@@ -266,7 +266,7 @@ var SelectUser = React.createClass({
                <form className="user-selector">
                    <h2>Who are you?</h2>
                    <select ref="userName" required>
-                       <option>Annie</option>
+                       <option>Julie</option>
                        <option>Ben</option>
                        <option>Doug</option>
                        <option>Kate</option>
